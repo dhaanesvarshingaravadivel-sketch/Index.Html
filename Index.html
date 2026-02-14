@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For My Love ❤️</title>
+
+<style>
+body {
+    margin: 0;
+    overflow: hidden;
+    background: radial-gradient(circle at center, #1a001f, #000000);
+    font-family: 'Georgia', serif;
+}
+
+canvas {
+    display: block;
+}
+
+.love-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 50px;
+    color: #ff99cc;
+    opacity: 0;
+    text-align: center;
+    text-shadow: 0 0 20px #ff66b2;
+    transition: opacity 3s ease;
+}
+
+.subtitle {
+    font-size: 20px;
+    margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="treeCanvas"></canvas>
+
+<div class="love-text" id="loveText">
+    I Love You ❤️
+    <div class="subtitle">Forever & Always</div>
+</div>
+
+<script>
+const canvas = document.getElementById('treeCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let branches = [];
+let flowers = [];
+let maxDepth = 9;
+
+function drawBranch(x, y, len, angle, depth) {
+    if (depth === 0) {
+        flowers.push({x, y, size: 0});
+        return;
+    }
+
+    let x2 = x + len * Math.cos(angle);
+    let y2 = y - len * Math.sin(angle);
+
+    ctx.strokeStyle = "rgba(139,69,19,0.8)";
+    ctx.lineWidth = depth;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+
+    setTimeout(() => {
+        drawBranch(x2, y2, len * 0.7, angle + 0.4, depth - 1);
+        drawBranch(x2, y2, len * 0.7, angle - 0.4, depth - 1);
+    }, 300);
+}
+
+function growTree() {
+    drawBranch(canvas.width/2, canvas.height, 120, Math.PI/2, maxDepth);
+}
+
+function animateFlowers() {
+    flowers.forEach(flower => {
+        if (flower.size < 8) {
+            flower.size += 0.2;
+        }
+
+        ctx.beginPath();
+        ctx.fillStyle = "pink";
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = "#ff66b2";
+        ctx.arc(flower.x, flower.y, flower.size, 0, Math.PI*2);
+        ctx.fill();
+    });
+
+    requestAnimationFrame(animateFlowers);
+}
+
+setTimeout(() => {
+    growTree();
+}, 1000);
+
+setTimeout(() => {
+    document.getElementById("loveText").style.opacity = 1;
+}, 8000);
+
+animateFlowers();
+</script>
+
+</body>
+</html>
